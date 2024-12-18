@@ -1,4 +1,4 @@
 #!/bin/bash
-ansible-playbook entrypoint.yml  -c local  --tags run
+ansible-playbook entrypoint.yml  -c local --tag "run"
 echo "Sleeping awaiting action!"
-/bin/sleep infinity
+python3 listener_main.py

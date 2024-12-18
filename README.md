@@ -1,44 +1,47 @@
-[![Publish Docker image](https://github.com/PenguinCloud/project-template/actions/workflows/docker-image.yml/badge.svg)](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml) [![version](https://img.shields.io/badge/version-5.1.1-blue.svg)](https://semver.org) 
+# WaddleBot Listener
 
-# Project Overview
-<< This is a template. Copy this templated repository to make new projects. Once done, add a 1 paragraph introduction / elevator speech about your project.
->>
-# Why this image vs others
-## Built in self testing and healing
-All PTG builds have unit and dynamic tests as part of the build of their images, as well as during runtime to ensure the system keeps running as expected. If the system falls out of bounds of the test, the images have some self healing capabilities fix common minor problems.
+This listener is responsible for the handling commands that are read through the Matterbridge component of the core system. Its also responsible for the connection to the Redis Cache for command retrieval. (WIP: Main redis cache still needs to be implemented. Currently uses a local Redis cache)
 
-## Secured... even if the software isn'template
-All PTG images under go a 8 stage security check to ensure not only is the PTG portion of the code secure, but to also identify and help remediate the underlying libraries and software security. 
+# Basic Setup
 
-## Updated daily
-All of our images are checked daily for updates from upstream sources.
+## 1. Python local testing
 
-## Designed for air-gapped or for internet facing
-All PTG images are designed to be ran inside of air gapped environments with no internet, allowing datacenters to use a local cache as well saving bandwidth.
+To test the API without it being in a container, do the following:
 
-## Active contribution and maintenance
-PTG is a company with funding and full time contributors to ensure our images aren't stale.
+1. Ensure that you have python installed on your local machine, preferably v3.12. 
+Download link: (https://www.python.org/downloads/)
+To check if its installed correctly, run the following command in the terminal:
 
-## Scalable
-ALl PTG images are designs to be micro-containers, ensuring easy verical and horizontal scaling is possible.
+`py --version`
 
-## PTG drinks it's own koolaid
-PTG actively uses it's own images for everything so we can identify bugs which our automation misses.
+If its installed correctly, you will see this output:
 
-## Beta testing
-PTG relies on volunteer customers and community members to beta test images, ensuring our stable / production images are well baked and as bug free as possible solutions.
+`Python 3.12.3`
 
-# Contributors
-## PTG
-Maintainer: creatorsemailhere@penguintech.group
-General: info@penguintech.group
+2. Install the python virtual environment in the root folder of the project by typing:
 
-## community
+`py -m venv ./venv`
 
-* Insert list of community collaborators
+3. Activate the virtual environment by running:
 
+`venv\scripts\activate.bat`
 
-# Resources
-Documentation: ./docs/
-Premium Support: https://support.penguintech.group 
-Community Bugs / Issues: -/issues
+4. Install the requirements of the script by running:
+
+`pip install -r requirements.txt`
+
+5. Ensure that the following environmental variables are available:
+
+`
+MATTERBRIDGE_URL
+USER_MANGER_URL
+MARKETPLACE_URL
+COMMUNITY_MODULES_URL
+CONTEXT_URL
+REDIS_HOST
+REDIS_PORT
+`
+
+6. Run the app by running the following command while having the virtual env active:
+
+`py listener.py`
