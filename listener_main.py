@@ -20,6 +20,9 @@ communityModulesURL = os.getenv('COMMUNITY_MODULES_URL')
 # Initial context API URL to set the initial context of new users to the database.
 contextURL = os.getenv('CONTEXT_URL')
 
+# Commands API URL to get the commands from the database
+commandsURL = os.getenv('COMMANDS_URL')
+
 # Redis parameters
 redisHost = os.getenv('REDIS_HOST')
 redisPort = os.getenv('REDIS_PORT')
@@ -30,7 +33,7 @@ def main() -> None:
     matterbridgePostURL = matterbridgeURL + 'message'
 
     # Initialize the Matterbridge Link
-    listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL)
+    listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL, commandsURL=commandsURL)
 
     # Start listening for messages
     listener.listen()

@@ -16,12 +16,13 @@ from src.models.dataclasses import messageData, commandData, sendMessageData, id
 logging.basicConfig(level=logging.INFO)
 
 class WaddleBotListener:
-    def __init__(self, matterbridgeGetURL: str, matterbridgePostURL: str, contextURL: str, redisHost: str, redisPort: int, marketplaceURL: str, communityModulesURL: str) -> None:
+    def __init__(self, matterbridgeGetURL: str, matterbridgePostURL: str, contextURL: str, redisHost: str, redisPort: int, marketplaceURL: str, communityModulesURL: str, commandsURL: str) -> None:
         # Initialize the variables
         self.matterbridgeGetURL = matterbridgeGetURL
         self.matterbridgePostURL = matterbridgePostURL
         self.marketplaceURL = marketplaceURL
         self.communityModulesURL = communityModulesURL
+        self.commandsURL = commandsURL
 
         self.initialContextURL = contextURL + "initialize_user.json/"
         self.getContextURL = contextURL + "get_by_identity_name.json/"
@@ -34,7 +35,8 @@ class WaddleBotListener:
         # TODO: When the Redis cache is implemented, remove the below execution of the add_test_commands function
         # Add the test commands to the Redis cache
         logging.info("Adding test commands to Redis....")
-        self.redisManager.add_test_commands()
+        # self.redisManager.get_all_commands()
+        self.redisManager.init_commands(self.commandsURL)
 
         logging.info("Listening for messages....")
 

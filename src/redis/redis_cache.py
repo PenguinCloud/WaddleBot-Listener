@@ -1,4 +1,8 @@
 import redis
+import os
+
+import logging
+import requests
 
 # TODO: Remove these test commands when the cache is officially deployed
 testCommands = {
@@ -28,12 +32,29 @@ testCommands = {
     "!giveaway": "Giveaway",
     # Test script related commands
     "#test": "Test Module",
-
 }
 
 class RedisCache:
     def __init__(self, host: str, port: int):
         self.redis = redis.Redis(host=host, port=port, decode_responses=True)
+
+    # Function to get all the necessary commands from waddledbm.
+    def init_commands(self, commandsUrl: str) -> None:
+        logging.info("Initializing commands from WaddleDBM")
+
+        # Get the commands from the given URL
+        response = requests.get(commandsUrl)
+
+        data = response.json()
+
+        # If the response is successful, add the commands to redis
+        if "data" in data:
+            commands = data["data"]
+            for command in commands:
+                if not self.redis.exists(command):
+                    self.redis.set(command["command_name"], commands["action_url"])
+        else:
+            logging.error("Failed to get commands from WaddleDBM")
 
     # Function to add the given test commands to redis, if they do not already exist.
     def add_test_commands(self) -> None:
