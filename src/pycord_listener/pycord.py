@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv() # load all the variables from the env file
 
 #write logs to file squeeker
-logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("squeeker"), logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("squeeker"), logging.StreamHandler()])
 
 # declaring the existance of a bot
 bot = discord.Bot()
@@ -55,7 +55,7 @@ async def list_search(ctx: discord.AutocompleteContext):
     """Return's A List Of Autocomplete Results"""
 
     # Get the list of commands.json
-    commands = await get_commands(url="http://127.0.0.1:8000/WaddleDBM/api/modules/get_all_module_commands")
+    commands = await get_commands(url="http://host.docker.internal:8000/WaddleDBM/api/modules/get_all_module_commands")
 
     # print("The list of retrieved commands is: ", commands)
 
@@ -123,6 +123,8 @@ def excute_action_url(command_name: str, action_url_to_exe: str, method: str, co
     logging.info("i sent this payload")
     logging.info(payload)
     # community_get_role [Global]
+
+    action_url_to_exe = action_url_to_exe.replace("127.0.0.1", "host.docker.internal")
     response = None
     if method == "GET":
         logging.info("exeing get")
@@ -190,7 +192,7 @@ def add_identity(username : str) -> None:
         "identity_name": username
       }
   
-      resp = requests.post(url="http://localhost:8000/WaddleDBM/api/context/initialize_user", json=payload)
+      resp = requests.post(url="http://host.docker.internal:8000/WaddleDBM/api/context/initialize_user", json=payload)
   
       if resp.ok:
           msg = ""
@@ -211,7 +213,7 @@ def get_context(username: str):
     }
 
     # Create the function URL
-    url = "http://127.0.0.1:8000/WaddleDBM/api/context/get_by_identity_name"
+    url = "http://host.docker.internal:8000/WaddleDBM/api/context/get_by_identity_name"
 
     resp = None
 

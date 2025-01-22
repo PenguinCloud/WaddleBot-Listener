@@ -2,6 +2,8 @@ from src.listener.listener import WaddleBotListener
 from dotenv import load_dotenv
 import os
 import src.pycord_listener.pycord
+from src.pycord_listener.app import *
+
 
 
 

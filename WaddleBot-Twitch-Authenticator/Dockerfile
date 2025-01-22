@@ -14,7 +14,7 @@ ARG MATTERBRIDGE_VERSION="1.26.0"
 
 
 # PUT YER ENVS in here
-ENV GATEWAY_ACTIVATE_URL="http://127.0.0.1:8000/WaddleDBM/routing_gateways/activate_gateway.json"
+ENV GATEWAY_ACTIVATE_URL="http://host.docker.internal:8000/WaddleDBM/routing_gateways/activate_gateway.json"
 
 
 
