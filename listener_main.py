@@ -1,6 +1,9 @@
 from src.listener.listener import WaddleBotListener
 from dotenv import load_dotenv
 import os
+import src.pycord_listener.pycord
+
+
 
 # Load the environment variables
 load_dotenv()
@@ -32,11 +35,11 @@ def main() -> None:
     matterbridgeGetURL = matterbridgeURL + 'messages'
     matterbridgePostURL = matterbridgeURL + 'message'
 
-    # Initialize the Matterbridge Link
-    listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL, commandsURL=commandsURL)
+    # # Initialize the Matterbridge Link
+    # listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL, commandsURL=commandsURL)
 
-    # Start listening for messages
-    listener.listen()
+    # # Start listening for messages
+    # listener.listen()
     
 
 if __name__ == '__main__':
