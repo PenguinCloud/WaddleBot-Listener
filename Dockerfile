@@ -46,7 +46,7 @@ RUN ansible-playbook entrypoint.yml -c local --tags "build"
 
 
 # Switch to non-root user
-# USER waddlebot
+USER waddlebot
 
 # Entrypoint time (aka runtime)
 ENTRYPOINT ["/bin/bash","/opt/manager/entrypoint.sh"]

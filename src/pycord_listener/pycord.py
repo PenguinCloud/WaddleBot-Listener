@@ -1,4 +1,5 @@
 import discord
+import threading
 import os # default module
 import logging
 import requests
@@ -11,8 +12,10 @@ from dotenv import load_dotenv
 
 load_dotenv() # load all the variables from the env file
 
+
+
 #write logs to file squeeker
-# logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("squeeker"), logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("squeeker.txt"), logging.StreamHandler()])
 
 # declaring the existance of a bot
 bot = discord.Bot()
@@ -54,8 +57,10 @@ async def write_to_file(action_list):
 async def list_search(ctx: discord.AutocompleteContext):
     """Return's A List Of Autocomplete Results"""
 
+    pycord_get_commands = os.getenv('PYCORD_GET_COMMANDS')
+    
     # Get the list of commands.json
-    commands = await get_commands(url="http://host.docker.internal:8000/WaddleDBM/api/modules/get_all_module_commands")
+    commands = await get_commands(url=pycord_get_commands)
 
     # print("The list of retrieved commands is: ", commands)
 
@@ -113,6 +118,8 @@ def data_to_string(data: dict) -> str:
 def excute_action_url(command_name: str, action_url_to_exe: str, method: str, command_string: str, author_name: str, get_my_context: str):
     html_to_text = html2text.HTML2Text()
     logging.info(action_url_to_exe)
+
+    
 
 #for testing, idientiy and community is hard coded
     payload = {
@@ -186,13 +193,15 @@ def excute_action_url(command_name: str, action_url_to_exe: str, method: str, co
 # Function to add an identity (User) to the database
 def add_identity(username : str) -> None:
   logging.info("Adding Identity....")
-  
+
+  Pycord_add_identity = os.getenv('PYCORD_ADD_IDENTITY')
+
   try:
       payload = {
         "identity_name": username
       }
   
-      resp = requests.post(url="http://host.docker.internal:8000/WaddleDBM/api/context/initialize_user", json=payload)
+      resp = requests.post(url=Pycord_add_identity, json=payload)
   
       if resp.ok:
           msg = ""
@@ -208,12 +217,14 @@ def add_identity(username : str) -> None:
 def get_context(username: str):
     logging.info("Getting the context....")
 
+    pycord_get_context = os.getenv('PYCORD_GET_COTEXT')
+
     payload = {
         "identity_name": username
     }
 
     # Create the function URL
-    url = "http://host.docker.internal:8000/WaddleDBM/api/context/get_by_identity_name"
+    url = pycord_get_context
 
     resp = None
 
@@ -279,5 +290,6 @@ async def command_grab_function(
 
     await ctx.respond(response_result_from_action)
 
-bot.run(os.getenv('TOKEN')) # run the bot with the token
+t = threading.Thread(target=bot.run , args=(os.getenv('TOKEN')), daemon=True).start()
+
 
