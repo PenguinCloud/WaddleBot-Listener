@@ -24,8 +24,8 @@ class WaddleBotListener:
         self.communityModulesURL = communityModulesURL
         self.commandsURL = commandsURL
 
-        self.initialContextURL = contextURL + "initialize_user.json/"
-        self.getContextURL = contextURL + "get_by_identity_name.json/"
+        self.initialContextURL = contextURL + "initialize_user/"
+        self.getContextURL = contextURL + "get_by_identity_name/"
 
         # Initialize the Redis Manager
         self.redisManager = RedisCache(redisHost, redisPort)
@@ -372,12 +372,15 @@ class WaddleBotListener:
         logging.info("Getting the context....")
 
         # Create the function URL
-        url = f"{self.getContextURL}{username}"
+        url = f"{self.getContextURL}"
+
+        # Create the payload
+        payload = {"identity_name": username}
 
         resp = None
 
         try:
-            resp = requests.get(url=url)
+            resp = requests.get(url=url, json=payload)
         except requests.exceptions.RequestException as e:
             logging.error(e)
             return None

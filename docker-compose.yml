@@ -5,3 +5,10 @@ services:
     build: .
     env_file: .env
     restart: always
+    depends_on:
+      redis:
+        condition: service_started
+
+volumes:
+  redis_volume_data:
+  redis_insight_volume_data:
