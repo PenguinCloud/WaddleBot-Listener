@@ -60,7 +60,7 @@ def main() -> None:
 # if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
-    # loop.create_task(waddler_instance.run())
+    loop.create_task(waddler_instance.run())
     loop.create_task(listener.listen())
     
     try:
