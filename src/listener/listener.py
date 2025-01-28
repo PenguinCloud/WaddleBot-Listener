@@ -6,6 +6,7 @@ from urllib.parse import quote, urlencode, quote_plus
 import asyncio
 import threading
 import logging
+from asyncio import sleep
 
 from dataclasses import asdict
 
@@ -49,7 +50,7 @@ class WaddleBotListener:
             except requests.exceptions.RequestException as e:
                 logging.error(e)
                 logging.error("An error has occurred while trying to communicate with the API. Retrying in 1 second....")
-                time.sleep(1)
+                await asyncio.sleep(1)
                 continue
 
             
@@ -87,7 +88,7 @@ class WaddleBotListener:
                 logging.error("An error has occurred while trying to communicate with the API.")
 
 
-            time.sleep(1)
+            await asyncio.sleep(1)
 
     # Function that executes the command from the message
     def execute_command_from_message(self, username: str, message: str, channel: str, gateway: str, account: str, messageData: messageData) -> None:
@@ -110,7 +111,7 @@ class WaddleBotListener:
 
                 logging.info(f"Timeout command found. Timeout time: {timeoutTime} seconds.")
 
-                time.sleep(int(timeoutTime))
+                asyncio.sleep(int(timeoutTime))
 
                 logging.info("Timeout completed. Executing the command....")
             else:
