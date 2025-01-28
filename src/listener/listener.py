@@ -31,7 +31,7 @@ class WaddleBotListener:
         self.redisManager = RedisCache(redisHost, redisPort)
 
     # Function to listen for messages
-    def listen(self) -> None:
+    async def listen(self) -> None:
         # TODO: When the Redis cache is implemented, remove the below execution of the add_test_commands function
         # Add the test commands to the Redis cache
         logging.info("Adding test commands to Redis....")

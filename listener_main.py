@@ -43,10 +43,10 @@ def main() -> None:
     matterbridgeGetURL = matterbridgeURL + 'messages'
     matterbridgePostURL = matterbridgeURL + 'message'
 
-    # # Initialize the Matterbridge Link
-    # listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL, commandsURL=commandsURL)
+    # Initialize the Matterbridge Link
+    listener = WaddleBotListener(matterbridgeGetURL, matterbridgePostURL, contextURL, redisHost, redisPort, marketplaceURL, communityModulesURL, commandsURL=commandsURL)
 
-    # # Start listening for messages
+    # Start listening for messages
     # listener.listen()
 
     waddler_instance = The_Waddler(waddler_token = waddler_token,
@@ -60,7 +60,8 @@ def main() -> None:
 # if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
-    loop.create_task(waddler_instance.run())
+    # loop.create_task(waddler_instance.run())
+    loop.create_task(listener.listen())
     
     try:
         loop.run_forever()
