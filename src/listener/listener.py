@@ -154,7 +154,16 @@ class WaddleBotListener:
         if module is None:
             return "The command could not be found. Ensure that the command is typed correctly."
 
-        return self.execute_command(username, context_data, message, module, channel, account, messageData)
+        return self.execute_command(
+            username=username,
+            contextData=context_data,
+            message=message,
+            commandData=module,
+            moduleId=module['module_id'],
+            moduleTypeName=module['module_type_name'],
+            sessionData=messageData[0]['session_data'],
+            priv_list=messageData[0]['priv_list']
+        )
 
     # Function to lookup the command in the Redis cache
     def lookup_command(self, commands, username):
@@ -290,21 +299,17 @@ class WaddleBotListener:
 
         return url
     
-    # Function to create a function payload with values by adding given values and keys to a dictionary
-    def create_function_payload(self, keys: list, values: list, username: str) -> dict:
+    # Function to create a function payload that contains the identity_name, community_name, and command_string
+    def create_function_payload(self, command_string: str, identity_name: str, community_name: str) -> dict:
         logging.info("Creating the function payload....")
 
         # Create the payload dictionary
         payload = {}
 
-        # Add the keys and values to the payload
-        for i in range(len(keys)):
-            payload[keys[i]] = values[i]
-
-        # Add the username to the payload if it is not None
-        logging.info(f"Username to be added to the payload: {username}")
-        if username is not None:
-            payload['identity_name'] = username
+        # Add the identity_name, community_name, and command_string to the payload
+        payload['identity_name'] = identity_name
+        payload['community_name'] = community_name
+        payload['command_string'] = command_string
 
         return payload
     
@@ -399,24 +404,11 @@ class WaddleBotListener:
 
 
     # Function to execute a command from the Redis cache, given the message command and the command data
-    def execute_command(self, username: str, contextData: contextData, message: str, commandData: commandData, moduleId: int, moduleTypeName: str, channel: str, account: str, sessionData: sessionData, priv_list: list) -> str:
+    def execute_command(self, username: str, contextData: contextData, message: str, commandData: commandData, moduleId: int, moduleTypeName: str, sessionData: sessionData, priv_list: list) -> str:
         logging.info("Executing the command....")
-
-        # Get the payload keys from the command data
-        keys = self.get_payload_keys(commandData)
-        
-        # Get the function parameters from the command data
-        funcParams = self.get_function_params(commandData)
-
-        if keys is None:
-            msg = "The command does not exist. Ensure that you typed it correctly."
-            logging.info(msg)
-            return msg
 
         # Get the action value from the metadata
         action = commandData['action']
-
-        
         
         community_name = contextData['community_name']
 
@@ -426,18 +418,6 @@ class WaddleBotListener:
 
         # Get the command parameters from the message
         params = self.get_message_params(message)
-
-        # Check if 'community_name' is in the function parameters. If it is, add the community name to the parameters at the beginning of the list
-        if funcParams is not None and "community_name" in funcParams:
-            params.insert(0, community_name)
-
-        # Check if 'account' is in the function parameters. If it is, add the account to the parameters at the beginning of the list
-        if funcParams is not None and "account" in funcParams:
-            params.insert(0, account)
-
-        # Check if 'channel' is in the function parameters. If it is, add the channel to the parameters at the beginning of the list
-        if funcParams is not None and "channel_id" in funcParams:
-            params.insert(0, channel)
         
         # Check if the module_type_name is in the command data. After that, check if the module is a core module. If it is a core module
         # then execute the command. If it is not a core module, check if the module exists in the community. If it does, execute the command.
@@ -455,52 +435,16 @@ class WaddleBotListener:
                     logging.info("The module does not exist in the community.")
                     return "The module does not exist in the community. Please install it first."
 
-        # Get the payload values from the message
-        values = self.get_payload_values(message)
-
         # Get the command description from the command meta data
         description = ""
         if 'description' in commandData:
             description = commandData['description']
 
-        logging.info(f"The keys before removing the identity_name key: {keys}")
-
-        # Set the payload username value if the identity_name key is in the keys
-        payloadUsername = None
-
-        if "identity_name" in keys:
-            payloadUsername = username
-            # Remove the identity_name key from the keys
-            keys.remove("identity_name")
-
-        # # If the key identity_name is in the keys, add the username to the values as a dictionary with the isidentity flag set to True
-        # for key in keys:
-        #     if key == "identity_name":
-        #         values.append(dict(value=username, isidentity=True))
-
-        logging.info(f"Keys: {keys}")
-        logging.info(f"Values: {values}")
-
-        # Check if the number of keys and values match
-        if len(keys) != len(values):
-            msg = ""
-
-            # If the command description was found, add it to the message
-            if description != "":
-                msg = f"Command description: {description}"
-            else:
-                msg = "The number of keys and values do not match."
-
-            logging.info(msg)
-            return msg
-        
-        # Check if the number 
-
         # Create the function URL
         url = self.create_function_url(action, params)
 
         # Create the function payload
-        payload = self.create_function_payload(keys, values, payloadUsername)
+        payload = self.create_function_payload(identity_name=username, community_name=community_name, command_string=message)
 
         logging.info(f"URL: {url}")
         logging.info(f"Payload: {payload}")
