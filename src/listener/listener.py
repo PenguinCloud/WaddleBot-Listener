@@ -25,8 +25,8 @@ class WaddleBotListener:
         self.communityModulesURL = communityModulesURL
         self.commandsURL = commandsURL
 
-        self.initialContextURL = contextURL + "initialize_user/"
-        self.getContextURL = contextURL + "get_by_identity_name/"
+        self.initialContextURL = f"{contextURL}initialize_user/"
+        self.getContextURL = f"{contextURL}get_by_identity_name/"
 
         # Initialize the Redis Manager
         self.redisManager = RedisCache(redisHost, redisPort)
