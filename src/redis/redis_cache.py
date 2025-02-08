@@ -51,8 +51,8 @@ class RedisCache:
         if "data" in data:
             commands = data["data"]
             for command in commands:
-                if not self.redis.exists(command):
-                    self.redis.set(command["command_name"], commands["action_url"])
+                if not self.redis.exists(command["command_name"]):
+                    self.redis.set(command["command_name"], command["action_url"])
         else:
             logging.error("Failed to get commands from WaddleDBM")
 

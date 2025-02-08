@@ -21,6 +21,22 @@
     group: "{{ run.user }}"
     mode: '0755'
 
+- name: Make sure the squeeker is executable by the run user
+  ansible.builtin.file:
+    dest: "/opt/manager/squeeker.txt"
+    state: touch
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+    mode: '0755'
+
+- name: Make sure the banana is executable by the run user
+  ansible.builtin.file:
+    dest: "/opt/manager/bananafile.json"
+    state: touch
+    owner: "{{ run.user }}"
+    group: "{{ run.user }}"
+    mode: '0755'
+
 - name: Update repositories cache 
   ansible.builtin.apt:
     update_cache: yes

@@ -16,8 +16,8 @@ ARG MATTERBRIDGE_VERSION="1.26.0"
 # PUT YER ENVS in here
 ENV TWITCH_APP_ID=""
 ENV TWITCH_APP_SECRET=""
-ENV CONTEXT_URL="http://127.0.0.1:8000/WaddleDBM/context/initialize_user.json"
-ENV GATEWAYS_GET_URL="http://127.0.0.1:8000/WaddleDBM/routing_gateways/get_all.json"
+ENV CONTEXT_URL="http://host.docker.internal:8000/WaddleDBM/context/initialize_user.json"
+ENV GATEWAYS_GET_URL="http://host.docker.internal:8000/WaddleDBM/routing_gateways/get_all.json"
 ENV EVENTSUB_URL = 'https://mj-dev.penguintech.io/'
 
 
